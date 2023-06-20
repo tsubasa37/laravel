@@ -25,12 +25,12 @@ use App\Http\Controllers\Admin\OwnerController;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.welcome');
+// });
 
 Route::resource('owners', OwnerController::class)
-->middleware('auth:admin', 'verified');
+->middleware('auth:admin', 'verified')->except(['show']);
 
 
 Route::get('/dashboard', function () {
