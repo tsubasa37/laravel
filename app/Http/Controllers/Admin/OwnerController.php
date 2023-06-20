@@ -34,7 +34,7 @@ class OwnerController extends Controller
         //     'name' => 'ttt'
         // ]);
 
-        $owners = Owner::select('name','email','created_at')->get();
+        $owners = Owner::select('id','name','email','created_at')->get();
 
         return view('admin.owners.index',
         compact('owners'));
@@ -70,7 +70,8 @@ class OwnerController extends Controller
 
         return redirect()
         ->route('admin.owners.index')
-        ->with('message','オーナー登録を実施しました。');
+        ->with(['message'=>'オーナー登録を実施しました。',
+        'status' => 'info']);
 
     }
 
@@ -87,7 +88,8 @@ class OwnerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $owner = Owner::findOrFail($id);
+        return view('admin.owners.edit',compact('owner'));
     }
 
     /**
@@ -95,7 +97,16 @@ class OwnerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $owner = Owner::findOrFail($id);
+        $owner->name = $request->name;
+        $owner->email = $request->email;
+        $owner->password = Hash::make($request->password);
+        $owner->save();
+
+        return redirect()
+        ->route('admin.owners.index')
+        ->with(['message'=>'オーナー情報を更新しました。',
+        'status' => 'info']);
     }
 
     /**
@@ -103,6 +114,22 @@ class OwnerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // ソフトデリート
+        Owner::findOrFail($id)->delete();
+        return redirect()
+        ->route('admin.owners.index')
+        ->with(['message'=>'オーナー情報を削除しました。',
+        'status' => 'alert']);
     }
+
+
+    // 期限切れオーナー
+    public function expiredOwnerIndex(){
+        $expiredOwners = Owner::onlyTrashed()->get();
+        return view('admin.expired-owners',compact('expiredOwners'));
+        }
+        public function expiredOwnerDestroy($id){
+            Owner::onlyTrashed()->findOrFail($id)->forceDelete();
+            return redirect()->route('admin.expired-owners.index');
+        }
 }

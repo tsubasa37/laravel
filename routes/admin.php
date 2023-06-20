@@ -37,6 +37,12 @@ Route::get('/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth:admin', 'verified'])->name('dashboard');
 
+Route::prefix('expired-owners')->
+    middleware('auth:admin')->group(function(){
+        Route::get('index', [OwnerController::class,'expiredOwnerIndex'])->name('expired-owners.index');
+        Route::post('destroy/{owner}',[OwnerController::class, 'expiredOwnerDestroy'])->name('expired-owners.destroy');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
