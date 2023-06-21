@@ -9,6 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <x-flash-message status="session('status')" />
                     @foreach ($shops as $shop)
                         <div class="w-1/2 p-4">
                             <a href="{{ route('owner.shops.edit',['shop' => $shop->id]) }}">
@@ -23,7 +24,7 @@
                                     <div class="text-xl">
                                         {{ $shop->name}}
                                     </div>
-                                    <x-shop-thumbnail />
+                                    <x-thumbnail :filename="$shop->filename" type="shops" />
                                 </div>
                             </a>
                         </div>
