@@ -65,7 +65,7 @@
                                         @foreach($categories as $category)
                                             <optgroup label="{{ $category->name }}">
                                                 @foreach($category->secondary as $secondary)
-                                                    <option value="{{ $secondary->id}}" > {{ $secondary->name }}</option>
+                                                    <option value="{{ $secondary->id}}"> {{ $secondary->name }}</option>
                                                 @endforeach
                                         @endforeach
                                     </select>
