@@ -4,10 +4,12 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\PrimaryCategory;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Favorite;
 
 class ItemController extends Controller
 {
@@ -61,6 +63,8 @@ class ItemController extends Controller
 
         return view('user.show', compact('product','quantity'));
     }
+
+
 
 
 

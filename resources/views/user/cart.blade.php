@@ -35,6 +35,7 @@
                                     </form>
                                 </div>
                             </div>
+                      
                         @endforeach
                         <div class="my-2">
                             小計: {{ number_format($totalPrice)}}<span class="text-smtext-gray-700">円(税込)</span>
@@ -49,4 +50,5 @@
             </div>
         </div>
     </div>
+    @vite(['resources/js/like.js'])
 </x-app-layout>

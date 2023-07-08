@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
 use App\Models\Stock;
 use App\Models\User;
+use App\Models\Favorite;
 use App\Models\SecondaryCategory;
 
 class Product extends Model
@@ -131,4 +133,34 @@ class Product extends Model
             return;
         }
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function is_liked_by_auth_user()
+    {
+      $id = Auth::id();
+
+      $favorites = array();
+      foreach($this->favorites as $favorite) {
+        array_push($favorites, $favorite->user_id);
+      }
+
+      if (in_array($id, $favorites)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+
+
 }

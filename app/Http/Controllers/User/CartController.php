@@ -130,4 +130,8 @@ class CartController extends Controller
         }
         return redirect()->route('user.cart.index');
     }
+
+
+
+
 }
