@@ -24,9 +24,11 @@ Route::get('/', function () {
 Route::middleware('auth:users')->group(function(){
         Route::get('/', [ItemController::class,'index'])->name('items.index');
         Route::get('show/{item}',[ItemController::class, 'show'])->name('items.show');
-        Route::get('/like/{id}', [FavoriteController::class,'like'])->name('reply.like');
-        Route::get('/unlike/{id}',[FavoriteController::class,'unlike'])->name('reply.unlike');
-});
+        // Route::get('/unlike/{id}',[FavoriteController::class,'unlike'])->name('reply.unlike');
+        // Route::post('/like', [FavoriteController::class,'like'])->name('items.like');
+    });
+
+    Route::post('/favorite/{id}', [FavoriteController::class,'toggleFavorite'])->name('favorite.toggle');
 
 
 Route::prefix('cart')->middleware('auth:users')->group(function(){

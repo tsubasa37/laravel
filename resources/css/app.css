@@ -4,3 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* .far {
+    color: red;
+} */
+
+.fas {
+    color: red;
+}
+
+.liked {
+    color: red;
+  }

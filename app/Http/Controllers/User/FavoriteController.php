@@ -10,32 +10,23 @@ use App\Models\Product;
 
 class FavoriteController extends Controller
 {
-    public function like($id)
+
+    public function toggleFavorite(Request $request, $id)
     {
-        Favorite::create([
-        'product_id' => $id,
-        'user_id' => Auth::id(),
-      ]);
+        $product = Product::findOrFail($id);
 
-      session()->flash('success', 'You Liked the Reply.');
+        // ユーザーがお気に入りに追加済みかどうかを判定
+        $isFavorited = $product->isFavoritedBy($request->user());
 
-      return redirect()->back();
-    }
+        if ($isFavorited) {
+            // お気に入りから削除
+            $product->favorites()->detach($request->user()->id);
+        } else {
+            // お気に入りに追加
+            $product->favorites()->attach($request->user()->id);
+        }
 
-    /**
-     * 引数のIDに紐づくリプライにUNLIKEする
-     *
-     * @param $id リプライID
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function unlike($id)
-    {
-      $favorites = Favorite::where('product_id', $id)->where('user_id', Auth::id())->first();
-      $favorites->delete();
-
-      session()->flash('success', 'You Unliked the Reply.');
-
-      return redirect()->back();
+        return response()->json(['favorited' => !$isFavorited]);
     }
 
 

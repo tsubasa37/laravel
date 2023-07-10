@@ -1,5 +1,5 @@
 import './bootstrap';
-require('./ajaxlike.js')
+
 
 import Alpine from 'alpinejs';
 

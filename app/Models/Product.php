@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Shop;
@@ -139,25 +140,36 @@ class Product extends Model
     }
 
 
-    public function favorites()
+    // public function favorites()
+    // {
+    //     return $this->hasMany(Favorite::class);
+    // }
+
+    // public function is_liked_by_auth_user()
+    // {
+    //     $id = Auth::id();
+
+    //     $favorites = array();
+    //     foreach($this->favorites as $favorite) {
+    //         array_push($favorites, $favorite->user_id);
+    //     }
+
+    //     if (in_array($id, $favorites)) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    // お気にり機能
+    public function favorites(): BelongsToMany
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsToMany(User::class, 'favorites', 'product_id', 'user_id');
     }
 
-    public function is_liked_by_auth_user()
+    public function isFavoritedBy(User $user): bool
     {
-      $id = Auth::id();
-
-      $favorites = array();
-      foreach($this->favorites as $favorite) {
-        array_push($favorites, $favorite->user_id);
-      }
-
-      if (in_array($id, $favorites)) {
-        return true;
-      } else {
-        return false;
-      }
+        return $this->favorites()->where('user_id', $user->id)->exists();
     }
 
 

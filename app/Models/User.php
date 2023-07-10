@@ -51,7 +51,7 @@ class User extends Authenticatable
         ->withPivot(['id', 'quantity']);
     }
 
-    public function Favorites()
+    public function likes()
     {
         return $this->hasMany(Favorite::class);
     }

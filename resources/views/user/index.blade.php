@@ -84,14 +84,16 @@
                                             <p class="mt-1">{{ number_format($product->price)}} <span class="text-sm text-gray-700">円(税込)</span></p>
                                         </div>
                                     </a>
-                                    <div>
-                                        {{-- aタグ以外でできる方法を探す --}}
-                                        @if($product->is_liked_by_auth_user())
-                                            <a href="{{ route('user.reply.unlike', ['id' => $product->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-heart" style="color: red;"></i></a>
-                                        @else
-                                            <a href="{{ route('user.reply.like', ['id' => $product->id]) }}" class="btn btn-secondary btn-sm"><i class="far fa-heart" style="color: gray;"></i></a>
-                                        @endif
+                                    <div class="product-item">
+                                        <span class="favorite-toggle" data-product-id="{{ $product->id }}">
+                                            @if ($product->isFavoritedBy(Auth::user()))
+                                                <i class="fas fa-heart liked"></i>
+                                            @else
+                                                <i class="far fa-heart"></i>
+                                            @endif
+                                        </span>
                                     </div>
+
                                 </div>
                             </div>
                         @endforeach
@@ -105,8 +107,37 @@
         </div>
     </div>
     <script>
+        $(function() {
+        $('.favorite-toggle').on('click', function() {
+            var $icon = $(this).find('i');
+            var productId = $(this).data('product-id');
+            var url = "{{ route('user.favorite.toggle', ':id') }}".replace(':id', productId);
+
+            // Ajaxリクエスト
+            $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: url,
+            method: 'POST',
+            data: {
+                product_id: productId
+            },
+            success: function(response) {
+                // お気に入りの状態に応じてアイコンを切り替える
+                $icon.toggleClass('liked');
+            },
+            error: function() {
+                console.log('Ajaxリクエストが失敗しました');
+            }
+            });
+        });
+        });
 
     </script>
+
+
+
     <script>
         const select = document.getElementById('sort');
         select.addEventListener('change',function(){
@@ -119,5 +150,15 @@
         });
         </script>
 
-        @vite(['resources/js/like.js'])
+        {{-- @vite(['resources/js/like.js']) --}}
 </x-app-layout>
+
+
+{{-- <div>
+
+    @if($product->is_liked_by_auth_user())
+        <a href="{{ route('user.reply.unlike', ['id' => $product->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-heart" style="color: red;"></i></a>
+    @else
+        <a href="{{ route('user.reply.like', ['id' => $product->id]) }}" class="btn btn-secondary btn-sm"><i class="far fa-heart" style="color: gray;"></i></a>
+    @endif
+</div> --}}
