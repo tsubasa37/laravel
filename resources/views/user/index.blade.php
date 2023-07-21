@@ -84,15 +84,13 @@
                                             <p class="mt-1">{{ number_format($product->price)}} <span class="text-sm text-gray-700">円(税込)</span></p>
                                         </div>
                                     </a>
-                                    <div class="product-item">
-                                        <span class="favorite-toggle" data-product-id="{{ $product->id }}">
-                                            @if ($product->isFavoritedBy(Auth::user()))
-                                                <i class="fas fa-heart liked"></i>
-                                            @else
-                                                <i class="far fa-heart"></i>
-                                            @endif
-                                        </span>
-                                    </div>
+                                    <span class="favorite-toggle" data-product-id="{{ $product->id }}">
+                                        @if ($product->isFavoritedBy(Auth::user()))
+                                            <i class="fas fa-heart liked"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
+                                    </span>
 
                                 </div>
                             </div>
@@ -107,31 +105,43 @@
         </div>
     </div>
     <script>
-        $(function() {
-        $('.favorite-toggle').on('click', function() {
-            var $icon = $(this).find('i');
-            var productId = $(this).data('product-id');
-            var url = "{{ route('user.favorite.toggle', ':id') }}".replace(':id', productId);
 
-            // Ajaxリクエスト
-            $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: url,
-            method: 'POST',
-            data: {
-                product_id: productId
-            },
-            success: function(response) {
-                // お気に入りの状態に応じてアイコンを切り替える
-                $icon.toggleClass('liked');
-            },
-            error: function() {
-                console.log('Ajaxリクエストが失敗しました');
-            }
+        $(function() {
+            $('.favorite-toggle').on('click', function() {
+                var $icon = $(this).find('i');
+                var productId = $(this).data('product-id');
+                var url = "{{ route('user.items.toggle', ':id') }}".replace(':id', productId);
+
+                // Ajaxリクエスト
+                $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: url,
+                method: 'POST',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+                    // お気に入りの状態に応じてアイコンを切り替える
+                    if (response.success) {
+                        $icon.toggleClass('liked');
+
+                        // Update the icon color immediately
+                        if ($icon.hasClass('liked')) {
+                            $icon.removeClass('far fa-heart').addClass('fas fa-heart');
+                        } else {
+                            $icon.removeClass('fas fa-heart').addClass('far fa-heart');
+                        }
+                    } else {
+                        console.log('User not authenticated');
+                    }
+                },
+                error: function() {
+                    console.log('Ajaxリクエストが失敗しました');
+                }
+                });
             });
-        });
         });
 
     </script>

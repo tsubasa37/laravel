@@ -140,27 +140,6 @@ class Product extends Model
     }
 
 
-    // public function favorites()
-    // {
-    //     return $this->hasMany(Favorite::class);
-    // }
-
-    // public function is_liked_by_auth_user()
-    // {
-    //     $id = Auth::id();
-
-    //     $favorites = array();
-    //     foreach($this->favorites as $favorite) {
-    //         array_push($favorites, $favorite->user_id);
-    //     }
-
-    //     if (in_array($id, $favorites)) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
     // お気にり機能
     public function favorites(): BelongsToMany
     {
@@ -171,8 +150,6 @@ class Product extends Model
     {
         return $this->favorites()->where('user_id', $user->id)->exists();
     }
-
-
 
 
 }
